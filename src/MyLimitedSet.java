@@ -6,16 +6,17 @@ import java.util.NoSuchElementException;
 public class MyLimitedSet<T> implements LimetedSet<T> {
     //HashMap takes 'T' and Integer that stores calls to 'T'
     private final HashMap<T, Integer> hashMap;
-    private int size = 10;
+    private final int SIZE;
 
-    //default size 10
+    //default SIZE 10
     public MyLimitedSet() {
-        hashMap = new HashMap<>(size);
+        SIZE = 10;
+        hashMap = new HashMap<>(SIZE);
     }
-    //takes input size
+    //takes input SIZE
     public MyLimitedSet(int size) {
         hashMap = new HashMap<>(size);
-        this.size = size;
+        this.SIZE = size;
     }
 
     //before putt it check:
@@ -26,9 +27,8 @@ public class MyLimitedSet<T> implements LimetedSet<T> {
     @Override
     public void add(T t) {
         if (!hashMap.containsKey(t)) {
-            if (hashMap.size() == size) {
+            if (hashMap.size() == SIZE) {
                 remove(findeMinCalls());
-                hashMap.put(t, 0);
             }
             hashMap.put(t, 0);
         }
@@ -52,7 +52,7 @@ public class MyLimitedSet<T> implements LimetedSet<T> {
     //findes 'T' with min calls and returns it
     //removes first found 'T' with min calls if set has similar calls
     //if map is empty then returns null
-    public T findeMinCalls() {
+    private T findeMinCalls() {
         try {
             return hashMap.entrySet().stream().min(Map.Entry.comparingByValue()).get().getKey();
         } catch (NoSuchElementException e) {
