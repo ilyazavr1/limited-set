@@ -1,8 +1,9 @@
+import java.util.HashSet;
 
 public class Main {
     public static void main(String[] args) {
-        
-
+        MyLimitedSet<Integer> set = new MyLimitedSet<>();
+        test1();
     }
 
 
@@ -20,17 +21,20 @@ public class Main {
         set.remove("3");
         set.print();
         set.add("42");
+        set.add("452");
+        set.print();
+        set.add("423");
         set.print();
 
     }
 
     public static void test1() {
-        MyLimitedSet<Integer> set = new MyLimitedSet<>();
-        for (int i = 1; i < 11; i++) {
+        MyLimitedSet<Integer> set = new MyLimitedSet<>(15);
+        for (int i = 1; i < 16; i++) {
             set.add(i);
         }
-        for (int i = 1; i < 11; i++) {
-           set.contains(i);
+        for (int i = 1; i < 16; i++) {
+            set.contains(i);
         }
 
         set.contains(5);
@@ -43,6 +47,7 @@ public class Main {
         set.contains(23);
         set.print();
         set.add(100);
+
         set.print();
 
     }

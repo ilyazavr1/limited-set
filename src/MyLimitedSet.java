@@ -1,12 +1,21 @@
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.NoSuchElementException;
 
 public class MyLimitedSet<T> implements LimetedSet<T> {
     //HashMap takes 'T' and Integer that stores calls to 'T'
     private final HashMap<T, Integer> hashMap;
+    private int size = 10;
 
+    //default size 10
     public MyLimitedSet() {
-        hashMap = new HashMap<>(10);
+        hashMap = new HashMap<>(size);
+    }
+    //takes input size
+    public MyLimitedSet(int size) {
+        hashMap = new HashMap<>(size);
+        this.size = size;
     }
 
     //before putt it check:
@@ -16,45 +25,42 @@ public class MyLimitedSet<T> implements LimetedSet<T> {
     // 2 if - puts 'T'
     @Override
     public void add(T t) {
-        if (hashMap.size() == 10 && !hashMap.containsKey(t)) {
-            remove(findeMinCalls());
-        }
         if (!hashMap.containsKey(t)) {
+            if (hashMap.size() == size) {
+                remove(findeMinCalls());
+                hashMap.put(t, 0);
+            }
             hashMap.put(t, 0);
         }
     }
 
     @Override
     public boolean remove(T t) {
-        if (hashMap.get(t) != null) {
-            hashMap.remove(t);
+        return hashMap.remove(t) != null;
+    }
+
+    @Override
+    public boolean contains(T t) {
+        if (hashMap.containsKey(t)) {
+            hashMap.put(t, hashMap.get(t) + 1);
             return true;
         }
         return false;
     }
 
-    @Override
-    public boolean contains(T t) {
-        if (hashMap.get(t) != null) {
-            int temp = hashMap.get(t) + 1;
-            hashMap.put(t, temp);
-            return hashMap.containsKey(t);
-        }
-        return false;
-    }
+
     //findes 'T' with min calls and returns it
     //removes first found 'T' with min calls if set has similar calls
-    private T findeMinCalls() {
-        int min = Integer.MAX_VALUE;
-        T toReturn = null;
-        for (Map.Entry<T, Integer> pair : hashMap.entrySet()) {
-            if (pair.getValue() < min) {
-                min = pair.getValue();
-                toReturn = pair.getKey();
-            }
+    //if map is empty then returns null
+    public T findeMinCalls() {
+        try {
+            return hashMap.entrySet().stream().min(Map.Entry.comparingByValue()).get().getKey();
+        } catch (NoSuchElementException e) {
+            System.out.println("Set is empty.");
         }
-        return toReturn;
+        return null;
     }
+
     //for test my test in main
     public void print() {
         System.out.println(hashMap.entrySet());
